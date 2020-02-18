@@ -1,8 +1,7 @@
 namespace analog.dial
 {
     export class DialManager {
-        protected _centerX: number = 110;
-        protected _centerY: number = 110;
+
         constructor(svg) {
 
             let n: number = 10;
@@ -11,8 +10,8 @@ namespace analog.dial
                 let radius: number = 85;
                 let theta = 2 * Math.PI * (i / n) - 0.5 * Math.PI;
                 let rotate = 360 * (i / n);
-                let x: string = (radius * Math.cos(theta) + this._centerX).toString();
-                let y: string = (radius * Math.sin(theta) + this._centerY).toString();
+                let x: string = (radius * Math.cos(theta) + AnalogClock.centerX).toString();
+                let y: string = (radius * Math.sin(theta) + AnalogClock.centerY).toString();
                 let dial = document.createElementNS('http://www.w3.org/2000/svg', 'text');
                 dial.setAttribute("class", "analog_dial");
                 dial.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + rotate + ")");

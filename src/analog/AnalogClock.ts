@@ -11,18 +11,18 @@ namespace analog {
     import LongHand = hands.LongHand;
     import DialManager = analog.dial.DialManager;
     export class AnalogClock {
-        protected _centerX: number = 110;
-        protected _centerY: number = 110;
+        static get centerY(): number {
+            return this._centerY;
+        }
+        static get centerX(): number {
+            return this._centerX;
+        }
+        private static _centerX: number = 110;
+        private static _centerY: number = 110;
         private readonly _hands: Hand[];
         private _dialManager:DialManager;
         constructor(svg) {
-
-
             this._dialManager = new DialManager(svg);
-
-
-
-
             this._hands = [];
             let hand: Hand;
             hand = new SecondHand(svg);

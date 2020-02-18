@@ -1,6 +1,7 @@
 ///<reference path="../../time/TimeKeeper.ts"/>
 namespace hands {
     import TimeKeeper = time.TimeKeeper;
+
     export class LongHand extends Hand {
         constructor(svg: HTMLElement) {
             super(svg);
@@ -11,6 +12,7 @@ namespace hands {
             this._path.setAttribute("stroke-linejoin", "round");
             this.enterFrame();
         }
+
         protected angleCalculation() {
             super.angleCalculation();
             if (Main.type == Main.TYPE_DECIMAL) {
