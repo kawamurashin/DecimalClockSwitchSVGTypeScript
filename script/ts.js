@@ -99,8 +99,8 @@ var digital;
     var DecimalTime = time.TimeKeeper;
     var DigitalClock = (function () {
         function DigitalClock(svg) {
-            this._positionX = 110;
-            this._positionY = 160;
+            this._positionX = 200;
+            this._positionY = 260;
             this._text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             this._text.setAttribute("id", "digital_clock");
             this._text.setAttribute('x', this._positionX.toString());
@@ -252,7 +252,7 @@ var analog;
         var DialManager = (function () {
             function DialManager(svg) {
                 var n = 10;
-                for (var i = 0; i < n; i++) {
+                for (var i = 1; i <= n; i++) {
                     var value = i;
                     var radius = 85;
                     var theta = 2 * Math.PI * (i / n) - 0.5 * Math.PI;
@@ -264,6 +264,20 @@ var analog;
                     dial_2.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + rotate + ")");
                     dial_2.textContent = value.toString();
                     svg.appendChild(dial_2);
+                }
+                n = 12;
+                for (var i = 1; i <= n; i++) {
+                    var value = i;
+                    var radius = 120;
+                    var theta = 2 * Math.PI * (i / n) - 0.5 * Math.PI;
+                    var rotate = 360 * (i / n);
+                    var x = (radius * Math.cos(theta) + analog.AnalogClock.centerX).toString();
+                    var y = (radius * Math.sin(theta) + analog.AnalogClock.centerY).toString();
+                    var dial_3 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    dial_3.setAttribute("class", "analog_dial");
+                    dial_3.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + rotate + ")");
+                    dial_3.textContent = value.toString();
+                    svg.appendChild(dial_3);
                 }
             }
             return DialManager;
@@ -310,8 +324,8 @@ var analog;
                 hand.enterFrame();
             }
         };
-        AnalogClock._centerX = 110;
-        AnalogClock._centerY = 110;
+        AnalogClock._centerX = 200;
+        AnalogClock._centerY = 200;
         return AnalogClock;
     }());
     analog.AnalogClock = AnalogClock;
