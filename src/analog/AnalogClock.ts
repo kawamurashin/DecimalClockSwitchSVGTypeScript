@@ -40,5 +40,9 @@ namespace analog {
                 hand.enterFrame();
             }
         }
+        public changeType()
+        {
+            this._dialManager.changeType();
+        }
     }
 }

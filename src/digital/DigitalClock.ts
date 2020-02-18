@@ -21,9 +21,19 @@ namespace digital
 
         public enterFrame():void
         {
-            let hour = (DecimalTime.decimalHour).toString();
-            let minute = digital.DigitalClock.plusZero(DecimalTime.decimalMinute);
-            let second = digital.DigitalClock.plusZero(DecimalTime.decimalSecond);
+            let hour:string;
+            let minute:string;
+            let second:string;
+            if(Main.type == Main.TYPE_DECIMAL)
+            {
+                hour = (DecimalTime.decimalHour).toString();
+                minute = digital.DigitalClock.plusZero(DecimalTime.decimalMinute);
+                second = digital.DigitalClock.plusZero(DecimalTime.decimalSecond);
+            }else{
+                hour = (DecimalTime.hour).toString();
+                minute = digital.DigitalClock.plusZero(DecimalTime.minute);
+                second = digital.DigitalClock.plusZero(DecimalTime.second);
+            }
             this._text.textContent =  hour + ":" + minute + ":" + second;
         }
 
