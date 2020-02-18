@@ -4,10 +4,10 @@ namespace digital
     import DecimalTime = time.TimeKeeper;
 
     export class DigitalClock {
-        //protected _positionX:number = 110;
-        protected _positionX:number = 200;
-        //protected _positionY:number = 160;
-        protected _positionY:number = 260;
+        protected _positionX:number = 110;
+        //protected _positionX:number = 200;
+        protected _positionY:number = 160;
+        //protected _positionY:number = 260;
         private readonly _text;
         constructor(svg) {
             this._text = document.createElementNS('http://www.w3.org/2000/svg', 'text');

@@ -99,8 +99,8 @@ var digital;
     var DecimalTime = time.TimeKeeper;
     var DigitalClock = (function () {
         function DigitalClock(svg) {
-            this._positionX = 200;
-            this._positionY = 260;
+            this._positionX = 110;
+            this._positionY = 160;
             this._text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             this._text.setAttribute("id", "digital_clock");
             this._text.setAttribute('x', this._positionX.toString());
@@ -380,8 +380,8 @@ var analog;
         AnalogClock.prototype.changeType = function () {
             this._dialManager.changeType();
         };
-        AnalogClock._centerX = 200;
-        AnalogClock._centerY = 200;
+        AnalogClock._centerX = 110;
+        AnalogClock._centerY = 110;
         return AnalogClock;
     }());
     analog.AnalogClock = AnalogClock;

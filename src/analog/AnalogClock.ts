@@ -17,8 +17,10 @@ namespace analog {
         static get centerX(): number {
             return this._centerX;
         }
-        private static _centerX: number = 200;
-        private static _centerY: number = 200;
+        private static _centerX: number = 110;
+        //private static _centerX: number = 200;
+        private static _centerY: number = 110;
+        //private static _centerY: number = 200;
         private readonly _hands: Hand[];
         private _dialManager:DialManager;
         constructor(svg) {
