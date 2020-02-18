@@ -249,27 +249,43 @@ var hands;
 })(hands || (hands = {}));
 var analog;
 (function (analog) {
+    var dial;
+    (function (dial_1) {
+        var DialManager = (function () {
+            function DialManager(svg) {
+                this._centerX = 110;
+                this._centerY = 110;
+                var n = 10;
+                for (var i = 0; i < n; i++) {
+                    var value = i;
+                    var radius = 85;
+                    var theta = 2 * Math.PI * (i / n) - 0.5 * Math.PI;
+                    var rotate = 360 * (i / n);
+                    var x = (radius * Math.cos(theta) + this._centerX).toString();
+                    var y = (radius * Math.sin(theta) + this._centerY).toString();
+                    var dial_2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    dial_2.setAttribute("class", "analog_dial");
+                    dial_2.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + rotate + ")");
+                    dial_2.textContent = value.toString();
+                    svg.appendChild(dial_2);
+                }
+            }
+            return DialManager;
+        }());
+        dial_1.DialManager = DialManager;
+    })(dial = analog.dial || (analog.dial = {}));
+})(analog || (analog = {}));
+var analog;
+(function (analog) {
     var SecondHand = hands.SecondHand;
     var ShortHand = hands.ShortHand;
     var LongHand = hands.LongHand;
+    var DialManager = analog.dial.DialManager;
     var AnalogClock = (function () {
         function AnalogClock(svg) {
             this._centerX = 110;
             this._centerY = 110;
-            var n = 10;
-            for (var i = 0; i < n; i++) {
-                var value = i;
-                var radius = 85;
-                var theta = 2 * Math.PI * (i / n) - 0.5 * Math.PI;
-                var rotate = 360 * (i / n);
-                var x = (radius * Math.cos(theta) + this._centerX).toString();
-                var y = (radius * Math.sin(theta) + this._centerY).toString();
-                var dial = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-                dial.setAttribute("class", "analog_dial");
-                dial.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + rotate + ")");
-                dial.textContent = value.toString();
-                svg.appendChild(dial);
-            }
+            this._dialManager = new DialManager(svg);
             this._hands = [];
             var hand;
             hand = new SecondHand(svg);
