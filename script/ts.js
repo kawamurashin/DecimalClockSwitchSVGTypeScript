@@ -220,7 +220,7 @@ var hands;
                 this._theta = 2 * Math.PI * ((TimeKeeper.decimalHour + (TimeKeeper.decimalMinute / 100)) / 10) - Math.PI * 0.5;
             }
             else {
-                this._theta = 2 * Math.PI * (((TimeKeeper.hour % 12) + (DecimalTime.minute / 60)) / 10) - Math.PI * 0.5;
+                this._theta = 2 * Math.PI * (((TimeKeeper.hour % 12) + (DecimalTime.minute / 60)) / 12) - Math.PI * 0.5;
             }
         };
         return ShortHand;
@@ -280,29 +280,56 @@ var analog;
                     this._duoDecimalDialList.push(dial_3);
                 }
             }
-            DialManager.prototype.changeType = function () {
+            DialManager.prototype.enterFrame = function () {
                 var n = this._decimalDialList.length;
-                if (Main.type == Main.TYPE_DECIMAL) {
-                    for (var i = 0; i < n; i++) {
-                        var dial_4 = this._decimalDialList[i];
-                        dial_4.setRadius(85);
+                for (var i = 0; i < n; i++) {
+                    var dial_4 = this._decimalDialList[i];
+                    dial_4.enterFrame();
+                }
+                n = this._duoDecimalDialList.length;
+                for (var i = 0; i < n; i++) {
+                    var dial_5 = this._duoDecimalDialList[i];
+                    dial_5.enterFrame();
+                }
+            };
+            DialManager.prototype.changeType = function () {
+                clearTimeout(this._id);
+                this._count = 0;
+                this.interval();
+            };
+            DialManager.prototype.count = function () {
+                var _this = this;
+                var handler = function () {
+                    _this.interval();
+                };
+                this._id = setTimeout(handler, 60);
+            };
+            DialManager.prototype.interval = function () {
+                console.log("interval");
+                var dial;
+                if (Main.type == Main.TYPE_DUODECIMAL) {
+                    if (this._count < this._decimalDialList.length) {
+                        dial = this._decimalDialList[this._count];
+                        dial.setRadius(120);
                     }
-                    n = this._duoDecimalDialList.length;
-                    for (var i = 0; i < n; i++) {
-                        var dial_5 = this._duoDecimalDialList[i];
-                        dial_5.setRadius(120);
+                    else {
+                        dial = this._duoDecimalDialList[this._count - this._decimalDialList.length];
+                        dial.setRadius(85);
                     }
                 }
                 else {
-                    for (var i = 0; i < n; i++) {
-                        var dial_6 = this._decimalDialList[i];
-                        dial_6.setRadius(120);
+                    if (this._count < this._duoDecimalDialList.length) {
+                        dial = this._duoDecimalDialList[this._count];
+                        dial.setRadius(120);
                     }
-                    n = this._duoDecimalDialList.length;
-                    for (var i = 0; i < n; i++) {
-                        var dial_7 = this._duoDecimalDialList[i];
-                        dial_7.setRadius(85);
+                    else {
+                        dial = this._decimalDialList[this._count - this._duoDecimalDialList.length];
+                        dial.setRadius(85);
                     }
+                }
+                this._count++;
+                if (this._count < this._duoDecimalDialList.length + this._decimalDialList.length) {
+                    this.count();
                 }
             };
             return DialManager;
@@ -343,6 +370,7 @@ var analog;
             configurable: true
         });
         AnalogClock.prototype.enterFrame = function () {
+            this._dialManager.enterFrame();
             var n = this._hands.length;
             for (var i = 0; i < n; i++) {
                 var hand = this._hands[i];
@@ -432,20 +460,32 @@ var analog;
             function Dial(svg, str, radius, rotate) {
                 this._theta = 0;
                 this._rotate = 0;
+                this._radius = radius;
                 this._rotate = rotate;
                 this._theta = (Math.PI * (this._rotate / 180)) - 0.5 * Math.PI;
-                var x = radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
-                var y = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
+                this._vx = this._vy = 0;
+                this._targetX = this._x = this._radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
+                this._targetY = this._y = this._radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
                 this._dial = document.createElementNS("http://www.w3.org/2000/svg", 'text');
                 this._dial.setAttribute("class", "analog_dial");
-                this._dial.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + this._rotate + ")");
+                this._dial.setAttribute("transform", "translate(" + this._x + " " + this._y + ") rotate(" + this._rotate + ")");
                 this._dial.textContent = str.toString();
                 svg.appendChild(this._dial);
             }
             Dial.prototype.setRadius = function (radius) {
-                var x = radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
-                var y = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
-                this._dial.setAttribute("transform", "translate(" + x + " " + y + ") rotate(" + this._rotate + ")");
+                this._targetX = radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
+                this._targetY = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
+            };
+            Dial.prototype.enterFrame = function () {
+                var k = 0.01;
+                var u = 0.1;
+                var dx = this._targetX - this._x;
+                this._vx += dx * k - u * this._vx;
+                this._x += this._vx;
+                var dy = this._targetY - this._y;
+                this._vy += dy * k - u * this._vy;
+                this._y += this._vy;
+                this._dial.setAttribute("transform", "translate(" + this._x + " " + this._y + ") rotate(" + this._rotate + ")");
             };
             return Dial;
         }());

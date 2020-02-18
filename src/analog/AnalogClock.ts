@@ -34,6 +34,7 @@ namespace analog {
         }
 
         public enterFrame() {
+            this._dialManager.enterFrame();
             let n = this._hands.length;
             for (let i = 0; i < n; i++) {
                 let hand = this._hands[i];

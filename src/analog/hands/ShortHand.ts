@@ -16,7 +16,7 @@ namespace hands {
             if(Main.type == Main.TYPE_DECIMAL){
                 this._theta = 2 * Math.PI * ((TimeKeeper.decimalHour + (TimeKeeper.decimalMinute / 100)) / 10) - Math.PI * 0.5;
             }else{
-                this._theta = 2 * Math.PI * (((TimeKeeper.hour%12) + (DecimalTime.minute / 60)) / 10) - Math.PI * 0.5;
+                this._theta = 2 * Math.PI * (((TimeKeeper.hour%12) + (DecimalTime.minute / 60)) / 12) - Math.PI * 0.5;
             }
 
         }

@@ -2,8 +2,11 @@ namespace analog.dial
 {
     export class DialManager {
 
-        private _decimalDialList:Dial[];
-        private _duoDecimalDialList:Dial[];
+        private readonly _decimalDialList:Dial[];
+        private readonly _duoDecimalDialList:Dial[];
+
+        private _id:number;
+        private _count:number;
 
         constructor(svg) {
             this._decimalDialList = [];
@@ -51,34 +54,98 @@ namespace analog.dial
             }
 
         }
+        public enterFrame():void
+        {
+            let n:number = this._decimalDialList.length;
+            for (let i: number = 0; i < n; i++) {
+                let dial = this._decimalDialList[i];
+                dial.enterFrame();
+
+            }
+
+            n = this._duoDecimalDialList.length;
+            for (let i: number = 0; i < n; i++) {
+                let dial = this._duoDecimalDialList[i];
+                dial.enterFrame();
+            }
+        }
 
         changeType() {
+            /*
             let n:number = this._decimalDialList.length;
             if(Main.type == Main.TYPE_DECIMAL)
             {
                 for (let i: number = 0; i < n; i++) {
                     let dial = this._decimalDialList[i];
-                    //dial.setPosition(x , y);
-                    dial.setRadius(85)
-
+                    dial.setRadius(85);
                 }
 
                 n = this._duoDecimalDialList.length;
                 for (let i: number = 0; i < n; i++) {
                     let dial = this._duoDecimalDialList[i];
-                    dial.setRadius(120)
+                    dial.setRadius(120);
                 }
             }else{
                 for (let i: number = 0; i < n; i++) {
                     let dial = this._decimalDialList[i];
-                    dial.setRadius(120)
+                    dial.setRadius(120);
                 }
 
                 n = this._duoDecimalDialList.length;
                 for (let i: number = 0; i < n; i++) {
                     let dial = this._duoDecimalDialList[i];
-                    dial.setRadius(85)
+                    dial.setRadius(85);
                 }
+            }*/
+
+            clearTimeout(this._id);
+            this._count = 0;
+            this.interval();
+
+        }
+        count():void
+        {
+            const handler = () =>
+            {
+                this.interval();
+            };
+            this._id = setTimeout(handler,60)
+        }
+        private interval():void
+        {
+            console.log("interval")
+            let dial:Dial;
+
+            if(Main.type == Main.TYPE_DUODECIMAL)
+            {
+                if(this._count < this._decimalDialList.length)
+                {
+                    dial = this._decimalDialList[this._count];
+                    dial.setRadius(120);
+                }else
+                {
+                    dial = this._duoDecimalDialList[this._count - this._decimalDialList.length];
+                    dial.setRadius(85);
+                }
+            }
+            else
+            {
+                if(this._count < this._duoDecimalDialList.length)
+                {
+                    dial = this._duoDecimalDialList[this._count];
+                    dial.setRadius(120);
+                }else
+                {
+                    dial = this._decimalDialList[this._count - this._duoDecimalDialList.length];
+                    dial.setRadius(85);
+                }
+            }
+
+            this._count++;
+            if(this._count < this._duoDecimalDialList.length + this._decimalDialList.length)
+            {
+                this.count();
+
             }
 
         }
