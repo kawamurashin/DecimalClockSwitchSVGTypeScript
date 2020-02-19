@@ -261,35 +261,51 @@ var analog;
     (function (dial_1) {
         var DialManager = (function () {
             function DialManager(svg) {
+                this.RADIUS_IN = 85;
+                this.RADIUS_OUT = 120;
+                var value;
+                var radius;
+                var rotate;
+                var dial;
                 this._decimalDialList = [];
+                if (Main.type == Main.TYPE_DECIMAL) {
+                    radius = this.RADIUS_IN;
+                }
+                else {
+                    radius = this.RADIUS_OUT;
+                }
                 var n = 10;
                 for (var i = 1; i <= n; i++) {
-                    var value = i.toString();
-                    var radius = 85;
-                    var rotate = 360 * (i / n);
-                    var dial_2 = new dial_1.Dial(svg, value, radius, rotate);
-                    this._decimalDialList.push(dial_2);
+                    value = i.toString();
+                    rotate = 360 * (i / n);
+                    dial = new dial_1.Dial(svg, value, radius, rotate);
+                    this._decimalDialList.push(dial);
                 }
                 this._duoDecimalDialList = [];
+                if (Main.type == Main.TYPE_DUODECIMAL) {
+                    radius = this.RADIUS_IN;
+                }
+                else {
+                    radius = this.RADIUS_OUT;
+                }
                 n = 12;
                 for (var i = 1; i <= n; i++) {
-                    var value = i.toString();
-                    var radius = 120;
-                    var rotate = 360 * (i / n);
-                    var dial_3 = new dial_1.Dial(svg, value, radius, rotate);
-                    this._duoDecimalDialList.push(dial_3);
+                    value = i.toString();
+                    rotate = 360 * (i / n);
+                    dial = new dial_1.Dial(svg, value, radius, rotate);
+                    this._duoDecimalDialList.push(dial);
                 }
             }
             DialManager.prototype.enterFrame = function () {
                 var n = this._decimalDialList.length;
                 for (var i = 0; i < n; i++) {
-                    var dial_4 = this._decimalDialList[i];
-                    dial_4.enterFrame();
+                    var dial_2 = this._decimalDialList[i];
+                    dial_2.enterFrame();
                 }
                 n = this._duoDecimalDialList.length;
                 for (var i = 0; i < n; i++) {
-                    var dial_5 = this._duoDecimalDialList[i];
-                    dial_5.enterFrame();
+                    var dial_3 = this._duoDecimalDialList[i];
+                    dial_3.enterFrame();
                 }
             };
             DialManager.prototype.changeType = function () {
@@ -305,26 +321,25 @@ var analog;
                 this._id = setTimeout(handler, 60);
             };
             DialManager.prototype.interval = function () {
-                console.log("interval");
                 var dial;
                 if (Main.type == Main.TYPE_DUODECIMAL) {
                     if (this._count < this._decimalDialList.length) {
                         dial = this._decimalDialList[this._count];
-                        dial.setRadius(120);
+                        dial.setRadius(this.RADIUS_OUT);
                     }
                     else {
                         dial = this._duoDecimalDialList[this._count - this._decimalDialList.length];
-                        dial.setRadius(85);
+                        dial.setRadius(this.RADIUS_IN);
                     }
                 }
                 else {
                     if (this._count < this._duoDecimalDialList.length) {
                         dial = this._duoDecimalDialList[this._count];
-                        dial.setRadius(120);
+                        dial.setRadius(this.RADIUS_OUT);
                     }
                     else {
                         dial = this._decimalDialList[this._count - this._duoDecimalDialList.length];
-                        dial.setRadius(85);
+                        dial.setRadius(this.RADIUS_IN);
                     }
                 }
                 this._count++;
@@ -405,21 +420,36 @@ var Main = (function () {
         var mouseout = function () {
             _this.mouseOutHandler();
         };
+        var timeout = function () {
+            _this.startTimeout();
+        };
         var svg = document.getElementById("svg");
+        var g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        g.setAttribute("clip-path", "url(#clip)");
+        svg.appendChild(g);
         var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
         rect.setAttribute("fill", "#CCC");
         rect.setAttribute("width", "220");
         rect.setAttribute("height", "220");
-        rect.setAttribute("fill-opacity", "0.3");
+        rect.setAttribute("fill-opacity", "0.0");
         rect.setAttribute("cursor", "pointer");
         rect.addEventListener("mouseover", mouseover);
         rect.addEventListener("mouseout", mouseout);
         rect.addEventListener("click", click);
-        svg.appendChild(rect);
+        g.appendChild(rect);
         DecimalTime.getInstance();
         DecimalTime.enterFrame();
-        this._digitalClock = new DigitalClock(svg);
-        this._analogClock = new AnalogClock(svg);
+        this._digitalClock = new DigitalClock(g);
+        this._analogClock = new AnalogClock(g);
+        var clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+        clipPath.id = "clip";
+        svg.appendChild(clipPath);
+        var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttributeNS(null, 'cx', "110");
+        circle.setAttributeNS(null, 'cy', "110");
+        circle.setAttributeNS(null, 'r', "110");
+        clipPath.appendChild(circle);
+        this._startIntervalID = setTimeout(timeout, 3000);
         var fps = 60 / 1000;
         setInterval(interval, fps);
     }
@@ -428,11 +458,21 @@ var Main = (function () {
         this._digitalClock.enterFrame();
         this._analogClock.enterFrame();
     };
+    Main.prototype.startTimeout = function () {
+        console.log("startInterval");
+        this._startIntervalID = null;
+        this.switch();
+    };
     Main.prototype.mouseOverHandler = function () {
     };
     Main.prototype.mouseOutHandler = function () {
     };
     Main.prototype.clickHandler = function () {
+        if (this._startIntervalID != null) {
+            console.log("hoge " + Math.random());
+            clearTimeout(this._startIntervalID);
+            this._startIntervalID = null;
+        }
         this.switch();
     };
     Main.prototype.switch = function () {
@@ -446,7 +486,7 @@ var Main = (function () {
     };
     Main.TYPE_DECIMAL = "decimal";
     Main.TYPE_DUODECIMAL = "duodecimal";
-    Main.type = Main.TYPE_DECIMAL;
+    Main.type = Main.TYPE_DUODECIMAL;
     return Main;
 }());
 window.addEventListener("load", function () {
@@ -477,8 +517,8 @@ var analog;
                 this._targetY = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
             };
             Dial.prototype.enterFrame = function () {
-                var k = 0.01;
-                var u = 0.1;
+                var k = 0.005;
+                var u = 0.05;
                 var dx = this._targetX - this._x;
                 this._vx += dx * k - u * this._vx;
                 this._x += this._vx;

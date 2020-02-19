@@ -36,8 +36,8 @@ namespace analog.dial
         }
 
         enterFrame() {
-            let k = 0.01;
-            let u = 0.1;
+            let k = 0.005;
+            let u = 0.05;
             let dx = this._targetX - this._x;
             this._vx += dx*k - u* this._vx;
             this._x += this._vx;
