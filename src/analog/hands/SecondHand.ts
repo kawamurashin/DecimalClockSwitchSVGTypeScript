@@ -1,7 +1,6 @@
 ///<reference path="../../time/TimeKeeper.ts"/>
 namespace hands {
     import TimeKeeper = time.TimeKeeper;
-
     export class SecondHand extends Hand {
         constructor(svg: HTMLElement) {
             super(svg);

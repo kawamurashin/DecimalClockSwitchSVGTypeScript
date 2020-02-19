@@ -211,7 +211,6 @@ var hands;
             _this._path.setAttribute("fill", "none");
             _this._path.setAttribute("stroke-width", "6");
             _this._path.setAttribute("stroke-linejoin", "round");
-            _this._path.setAttribute("user-select", "none");
             _this.enterFrame();
             return _this;
         }
