@@ -64,7 +64,7 @@ class Main {
         circle.setAttributeNS(null, 'r', "110");
         clipPath.appendChild(circle);
 
-        this._startIntervalID = setTimeout(timeout , 100);
+        this._startIntervalID = setTimeout(timeout , 3000);
 
         let fps = 60 / 1000;
         setInterval(interval, fps);

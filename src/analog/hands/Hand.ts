@@ -8,6 +8,7 @@ namespace hands {
 
         constructor(svg: HTMLElement) {
             this._path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            this._path.setAttribute("pointer-events", "none");
             svg.appendChild(this._path);
             this.angleCalculation();
             this._currentTheta = this._theta;

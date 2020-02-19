@@ -137,6 +137,7 @@ var hands;
         function Hand(svg) {
             this._vTheta = 0;
             this._path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            this._path.setAttribute("pointer-events", "none");
             svg.appendChild(this._path);
             this.angleCalculation();
             this._currentTheta = this._theta;
@@ -210,6 +211,7 @@ var hands;
             _this._path.setAttribute("fill", "none");
             _this._path.setAttribute("stroke-width", "6");
             _this._path.setAttribute("stroke-linejoin", "round");
+            _this._path.setAttribute("user-select", "none");
             _this.enterFrame();
             return _this;
         }
@@ -446,7 +448,7 @@ var Main = (function () {
         circle.setAttributeNS(null, 'cy', "110");
         circle.setAttributeNS(null, 'r', "110");
         clipPath.appendChild(circle);
-        this._startIntervalID = setTimeout(timeout, 100);
+        this._startIntervalID = setTimeout(timeout, 3000);
         var fps = 60 / 1000;
         setInterval(interval, fps);
     }

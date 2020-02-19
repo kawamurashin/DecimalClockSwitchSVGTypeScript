@@ -31,6 +31,7 @@ body {
     margin: 0 auto;
     text-anchor :middle;
     user-select: none;
+    pointer-events: none;
 }
 
 .analog_dial

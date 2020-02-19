@@ -9,6 +9,7 @@ namespace hands {
             this._path.setAttribute("fill", "none");
             this._path.setAttribute("stroke-width", "6");
             this._path.setAttribute("stroke-linejoin", "round");
+            this._path.setAttribute("user-select", "none");
             this.enterFrame();
         }
         protected angleCalculation() {
