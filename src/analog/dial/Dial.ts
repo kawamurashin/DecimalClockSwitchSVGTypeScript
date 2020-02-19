@@ -2,9 +2,8 @@ namespace analog.dial
 {
     export class Dial {
         private readonly _dial;
-        private _radius:number;
-        private _theta:number = 0;
-        private _rotate:number = 0;
+        private readonly _theta:number = 0;
+        private readonly _rotate:number = 0;
 
         //constructor(svg , str:string , x:number, y:number ,rotate:number) {
         private _targetX:number;
@@ -15,13 +14,12 @@ namespace analog.dial
         private _vy:number;
         constructor(svg , str:string  , radius:number ,rotate:number) {
 
-            this._radius = radius;
             this._rotate = rotate;
             this._theta =  (Math.PI * (this._rotate /180)) - 0.5 * Math.PI;
 
             this._vx = this._vy = 0;
-            this._targetX = this._x = this._radius * Math.cos(this._theta) + AnalogClock.centerX;
-            this._targetY = this._y = this._radius * Math.sin(this._theta) + AnalogClock.centerY;
+            this._targetX = this._x = radius * Math.cos(this._theta) + AnalogClock.centerX;
+            this._targetY = this._y = radius * Math.sin(this._theta) + AnalogClock.centerY;
 
             this._dial = document.createElementNS("http://www.w3.org/2000/svg", 'text');
             this._dial.setAttribute("class", "analog_dial");
@@ -31,6 +29,17 @@ namespace analog.dial
         }
 
         setRadius(radius: number) {
+
+            if(radius > 100)
+            {
+                let v:number = -3;
+
+
+                this._vx = v * Math.cos(this._theta);
+                this._vy = v * Math.sin(this._theta);
+            }
+
+
             this._targetX = radius * Math.cos(this._theta) + AnalogClock.centerX;
             this._targetY = radius * Math.sin(this._theta) + AnalogClock.centerY;
         }

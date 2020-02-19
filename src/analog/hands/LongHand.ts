@@ -14,7 +14,6 @@ namespace hands {
         }
 
         protected angleCalculation() {
-            super.angleCalculation();
             if (Main.type == Main.TYPE_DECIMAL) {
                 this._theta = 2 * Math.PI * (TimeKeeper.decimalMinute / 100) - Math.PI * 0.5;
             } else {

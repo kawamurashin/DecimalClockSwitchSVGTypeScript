@@ -64,7 +64,7 @@ class Main {
         circle.setAttributeNS(null, 'r', "110");
         clipPath.appendChild(circle);
 
-        this._startIntervalID = setTimeout(timeout , 3000);
+        this._startIntervalID = setTimeout(timeout , 100);
 
         let fps = 60 / 1000;
         setInterval(interval, fps);
@@ -79,7 +79,6 @@ class Main {
     //
     private startTimeout():void
     {
-        console.log("startInterval")
         this._startIntervalID = null;
         this.switch();
 
@@ -96,11 +95,9 @@ class Main {
     {
         if(this._startIntervalID != null)
         {
-            console.log("hoge " + Math.random())
             clearTimeout(this._startIntervalID);
             this._startIntervalID = null;
         }
-
         this.switch();
     }
     private switch():void

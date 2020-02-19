@@ -11,7 +11,6 @@ namespace hands {
             svg.appendChild(this._path);
             this.angleCalculation();
             this._currentTheta = this._theta;
-
         }
 
         public enterFrame(): void {

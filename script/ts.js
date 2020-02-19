@@ -187,7 +187,6 @@ var hands;
             return _this;
         }
         SecondHand.prototype.angleCalculation = function () {
-            _super.prototype.angleCalculation.call(this);
             if (Main.type == Main.TYPE_DECIMAL) {
                 this._theta = 2 * Math.PI * (TimeKeeper.decimalSecond / 100) - Math.PI * 0.5;
             }
@@ -215,7 +214,6 @@ var hands;
             return _this;
         }
         ShortHand.prototype.angleCalculation = function () {
-            _super.prototype.angleCalculation.call(this);
             if (Main.type == Main.TYPE_DECIMAL) {
                 this._theta = 2 * Math.PI * ((TimeKeeper.decimalHour + (TimeKeeper.decimalMinute / 100)) / 10) - Math.PI * 0.5;
             }
@@ -243,7 +241,6 @@ var hands;
             return _this;
         }
         LongHand.prototype.angleCalculation = function () {
-            _super.prototype.angleCalculation.call(this);
             if (Main.type == Main.TYPE_DECIMAL) {
                 this._theta = 2 * Math.PI * (TimeKeeper.decimalMinute / 100) - Math.PI * 0.5;
             }
@@ -449,7 +446,7 @@ var Main = (function () {
         circle.setAttributeNS(null, 'cy', "110");
         circle.setAttributeNS(null, 'r', "110");
         clipPath.appendChild(circle);
-        this._startIntervalID = setTimeout(timeout, 3000);
+        this._startIntervalID = setTimeout(timeout, 100);
         var fps = 60 / 1000;
         setInterval(interval, fps);
     }
@@ -459,7 +456,6 @@ var Main = (function () {
         this._analogClock.enterFrame();
     };
     Main.prototype.startTimeout = function () {
-        console.log("startInterval");
         this._startIntervalID = null;
         this.switch();
     };
@@ -469,7 +465,6 @@ var Main = (function () {
     };
     Main.prototype.clickHandler = function () {
         if (this._startIntervalID != null) {
-            console.log("hoge " + Math.random());
             clearTimeout(this._startIntervalID);
             this._startIntervalID = null;
         }
@@ -500,12 +495,11 @@ var analog;
             function Dial(svg, str, radius, rotate) {
                 this._theta = 0;
                 this._rotate = 0;
-                this._radius = radius;
                 this._rotate = rotate;
                 this._theta = (Math.PI * (this._rotate / 180)) - 0.5 * Math.PI;
                 this._vx = this._vy = 0;
-                this._targetX = this._x = this._radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
-                this._targetY = this._y = this._radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
+                this._targetX = this._x = radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
+                this._targetY = this._y = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
                 this._dial = document.createElementNS("http://www.w3.org/2000/svg", 'text');
                 this._dial.setAttribute("class", "analog_dial");
                 this._dial.setAttribute("transform", "translate(" + this._x + " " + this._y + ") rotate(" + this._rotate + ")");
@@ -513,6 +507,11 @@ var analog;
                 svg.appendChild(this._dial);
             }
             Dial.prototype.setRadius = function (radius) {
+                if (radius > 100) {
+                    var v = -3;
+                    this._vx = v * Math.cos(this._theta);
+                    this._vy = v * Math.sin(this._theta);
+                }
                 this._targetX = radius * Math.cos(this._theta) + analog.AnalogClock.centerX;
                 this._targetY = radius * Math.sin(this._theta) + analog.AnalogClock.centerY;
             };
